@@ -1,0 +1,1 @@
+cd ~/solvex && ./run.sh
