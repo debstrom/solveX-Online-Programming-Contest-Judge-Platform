@@ -1,0 +1,22 @@
+<?php
+require_once __DIR__ . '/../config/config.php';
+
+function db(): PDO {
+    static $pdo = null;
+    if ($pdo === null) {
+        $pdo = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4', DB_USER, DB_PASS, [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ]);
+        $pdo->exec("SET time_zone = '" . DB_TZ . "'");
+    }
+    return $pdo;
+}
+
+/** Run a prepared statement and return it. */
+function q(string $sql, array $params = []): PDOStatement {
+    $st = db()->prepare($sql);
+    $st->execute($params);
+    return $st;
+}
